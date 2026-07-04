@@ -1,0 +1,302 @@
+<html>
+<!--
+ Copyright (C) 2024 Florent Monnier
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so.
+-->
+<head>
+<title>snake 07e</title>
+<style>
+body {
+  background:#112;
+  padding-left:16px;
+  padding-top:14px;
+}
+canvas { background:#223; }
+div { color:#335; }
+</style>
+</head>
+<body>
+<canvas width="780" height="500" id="c1">
+</canvas>
+<div>
+- Arrow keys: move a snake (opposite direction to stop)<br />
+- 'A' release a new inhabitant<br />
+- 'S' switch to drive another snake
+</div>
+<script>
+var cnv = document.querySelector("#c1");
+var ctx = cnv.getContext("2d");
+
+const w = 780;
+const h = 500;
+
+var i = 0;
+var j = 0;
+
+var rand = Math.random ;
+var round = Math.round ;
+var floor = Math.floor ;
+var abs = Math.abs ;
+
+function rnd(a, b) {
+  return floor( a + rand() * (1 + b-a) );
+}
+
+function rndTake(arr) {
+  let n = num(arr);
+  let a = floor(rand() * n);
+  return arr[a];
+}
+
+function rndNum(arr) {
+  let n = num(arr);
+  return floor(rand() * n);
+}
+
+function num(arr) {
+  let _n = 0;
+  for (let _a of arr) { _n++; }
+  return _n;
+}
+
+const cShp1 = new Path2D();
+cShp1.arc(10, 10, 9, 0, 6.2830);
+
+const d1 = { x: 20, y:  0 };  // right
+const d2 = { x:  0, y: 20 };  // down
+const d3 = { x:-20, y:  0 };  // left
+const d4 = { x:  0, y:-20 };  // up
+const d0 = { x:  0, y:  0 };  // zero
+
+const ds = [
+  d1,
+  d2,
+  d3,
+  d4,
+];
+
+var sn1 = {
+  x:120,
+  y:100,
+  dir:d0,
+  trail:[],
+  size:64,  // max size
+  len:0,
+  twCl1:'#2358',
+  twCl2:'#46b2',
+};
+
+var sn2 = {
+  x:460,
+  y:320,
+  dir:d0,
+  trail:[],
+  size:64,
+  len:0,
+  twCl1:'#5238',
+  twCl2:'#b462',
+};
+
+var sn3 = {
+  x:240,
+  y:220,
+  dir:d0,
+  trail:[],
+  size:64,
+  len:0,
+  twCl1:'#2538',
+  twCl2:'#4b62',
+};
+
+
+function swtchSn() {
+  let sn = sn1;
+  sn1 = sn2;
+  sn2 = sn3;
+  sn3 = sn;
+}
+
+function setd(sn, d) {
+  if (sn.dir == d1 && d == d3) sn.dir = d0; else
+  if (sn.dir == d3 && d == d1) sn.dir = d0; else
+  if (sn.dir == d2 && d == d4) sn.dir = d0; else
+  if (sn.dir == d4 && d == d2) sn.dir = d0; else
+  sn.dir = d;
+}
+
+function stepSn(sn) {
+  let d = sn.dir;
+  if (d != d0) {
+    sn.trail.push( { x:sn.x, y:sn.y } );
+    sn.len++;
+    if (sn.len >= sn.size) sn.trail.shift();
+  }
+  sn.x += d.x;
+  sn.y += d.y;
+}
+
+
+window.addEventListener("keydown",
+  function (ev) {
+    switch (ev.keyCode) {
+      case 37: setd(sn1, d3); // left
+        break;
+      case 38: setd(sn1, d4); // up
+        break;
+      case 39: setd(sn1, d1); // right
+        break;
+      case 40: setd(sn1, d2); // down
+        break;
+    }
+    if (ev.key == 'p') setd(sn1, d0);
+    if (ev.key == ' ') setd(sn1, d0);
+    if (ev.key == 'a') putTwr(sn1);
+    if (ev.key == 's') swtchSn();
+  }, true
+);
+
+/*
+cnv.addEventListener("mousedown",
+  function (ev) {
+    //drawRect(220, 140, '#ddd');
+
+  }, false
+);
+
+function getPos(mouse) {
+  let cRect = cnv.getBoundingClientRect();
+  return {
+    x:mouse.clientX - cRect.left,
+    y:mouse.clientY - cRect.top,
+  };
+}
+*/
+
+var twrs = [];
+function putTwr(sn) {
+  twrs.push(
+    { x:sn.x,
+      y:sn.y,
+      lim:rnd(320, 3200),
+      cl1:sn.twCl1,
+      cl2:sn.twCl2,
+    }
+  );
+}
+
+function mvTwrs(twrs) {
+  if (num(twrs) > 0) {
+    for (let twr of twrs) {
+      if (rand() < 0.01) {
+        let d = rndTake(ds);
+        twr.x += d.x;
+        twr.y += d.y;
+      }
+    }
+  }
+}
+
+function stepTwrs() {
+  for (let tw of twrs) {
+    tw.lim--;
+  }
+  twrs = twrs.filter(tw => tw.lim >= 0);
+  
+  mvTwrs(twrs);
+}
+
+function drawTwr(tw) {
+  ctx.fillStyle = tw.cl1;
+  ctx.fillRect(tw.x-5, tw.y-5, 30, 30);
+  /*
+  ctx.fillStyle = '#46b';
+  ctx.font = '15px mono';
+  let t = round( tw.lim / 10 );
+  ctx.fillText(t, tw.x, tw.y+16);
+  */
+  drawShp(cShp1, tw.x, tw.y, tw.cl2);
+}
+
+function drawShp(shp, x, y, cl) {
+  ctx.lineWidth = 4.2;
+  ctx.strokeStyle = cl;
+  ctx.translate(x, y);
+  ctx.stroke(shp);
+  ctx.translate(-x, -y);
+}
+
+function drawBg() {
+  ctx.fillStyle = '#223';
+  ctx.fillRect(0, 0, w, h);
+}
+
+function drawRect(x, y, cl) {
+  ctx.fillStyle = cl;
+  ctx.fillRect(x, y, 20, 20);
+}
+
+function drawTxt(x, y, txt, cl) {
+  ctx.fillStyle = cl;
+  ctx.font = '15px mono';
+  ctx.fillText(txt, x, y);
+}
+
+function mvView1() {
+  setId();
+  ctx.translate(w/2 - sn1.x, h/2 - sn1.y);
+}
+
+function mvView() {
+  setId();
+  ctx.translate(-(floor(sn1.x / w) * w), -(floor(sn1.y / h) * h));
+}
+
+function drawSn(sn, cl) {
+  drawRect(sn.x, sn.y, cl);
+}
+
+function setId() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+//setTimeout(loop, 100);
+
+function draw() {
+  setId();
+  drawBg();
+  mvView();
+
+  for (let s of sn1.trail) drawRect(s.x, s.y, '#8888');
+  for (let s of sn2.trail) drawRect(s.x, s.y, '#8888');
+  for (let s of sn3.trail) drawRect(s.x, s.y, '#8888');
+
+  for (let tw of twrs) drawTwr(tw);
+
+  drawSn(sn1, '#ddd');
+  drawSn(sn2, '#888');
+  drawSn(sn3, '#888');
+}
+
+function step() {
+  stepSn(sn1);
+  stepSn(sn2);
+  stepSn(sn3);
+
+  stepTwrs();
+}
+
+function loop() {
+  draw();
+  step();
+}
+setInterval(loop, 200);
+
+</script>
+</body>
+</html>
