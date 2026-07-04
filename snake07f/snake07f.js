@@ -261,19 +261,30 @@ function stepTwrs(param) {
 }
 
 function step_f(param) {
-  var sn1$1 = stepSn(sn1);
-  var sn2$1 = stepSn(sn2);
-  var sn3$1 = stepSn(sn3);
-  sn_lst.contents = {
-    hd: sn1$1,
-    tl: {
-      hd: sn2$1,
-      tl: {
-        hd: sn3$1,
-        tl: /* [] */0
+  var match = sn_lst.contents;
+  if (match) {
+    var match$1 = match.tl;
+    if (match$1) {
+      var match$2 = match$1.tl;
+      if (match$2 && !match$2.tl) {
+        var sn1 = stepSn(match.hd);
+        var sn2 = stepSn(match$1.hd);
+        var sn3 = stepSn(match$2.hd);
+        sn_lst.contents = {
+          hd: sn1,
+          tl: {
+            hd: sn2,
+            tl: {
+              hd: sn3,
+              tl: /* [] */0
+            }
+          }
+        };
       }
+      
     }
-  };
+    
+  }
   stepTwrs(undefined);
   
 }

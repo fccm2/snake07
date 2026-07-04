@@ -315,11 +315,19 @@ let stepTwrs () =
 (* step-funct. *)
 
 let step_f () =
-  let sn1 = stepSn sn1 in
-  let sn2 = stepSn sn2 in
-  let sn3 = stepSn sn3 in
+  begin
+    match !sn_lst with
+    | [ sn1; sn2; sn3; ] ->
 
-  sn_lst := [ sn1; sn2; sn3; ] ;
+        let sn1 = stepSn sn1 in
+        let sn2 = stepSn sn2 in
+        let sn3 = stepSn sn3 in
+   
+        sn_lst := [ sn1; sn2; sn3; ] ;
+
+    | _ -> ()
+  end;
+
 
   (*
   stepSn(sn1);
