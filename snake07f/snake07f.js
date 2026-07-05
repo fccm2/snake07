@@ -118,7 +118,23 @@ function shift_rev(lst) {
   return shift(List.rev(lst));
 }
 
-function putTwr(sn) {
+function putTwr(param) {
+  var match = sn_lst.contents;
+  if (!match) {
+    return ;
+  }
+  var match$1 = match.tl;
+  if (!match$1) {
+    return ;
+  }
+  var match$2 = match$1.tl;
+  if (!match$2) {
+    return ;
+  }
+  if (match$2.tl) {
+    return ;
+  }
+  var sn = match.hd;
   return push(twrs_lst, {
               tx: sn.sx,
               ty: sn.sy,
@@ -457,7 +473,7 @@ function key_event(key_change, ev) {
   }
   switch (match$1) {
     case "a" :
-        putTwr(sn1);
+        putTwr(undefined);
         return ;
     case " " :
     case "p" :

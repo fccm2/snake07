@@ -146,14 +146,23 @@ let shift lst =
 let shift_rev lst =
   shift (List.rev lst)
 
-let putTwr sn =
-  push twrs_lst {
-    tx = sn.sx;
-    ty = sn.sy;
-    lim = rnd 320 3200;
-    cl1 = sn.twCl1;
-    cl2 = sn.twCl2;
-  }
+let putTwr () =
+
+  begin
+    match !sn_lst with
+    | [ sn; _; _; ] ->
+
+        push twrs_lst {
+          tx = sn.sx;
+          ty = sn.sy;
+          lim = rnd 320 3200;
+          cl1 = sn.twCl1;
+          cl2 = sn.twCl2;
+        }
+
+    | _ -> ()
+  end;
+
   (*
   twrs.push(
     { x:sn.x,
@@ -519,7 +528,7 @@ let key_event key_change ev =
   begin match key_change, ev.Canvas.key with
   | KeyDown, "p" -> setd d0; (* setd(sn1, d0); *) ()
   | KeyDown, " " -> setd d0; (* setd(sn1, d0); *) ()
-  | KeyDown, "a" -> putTwr sn1; (* putTwr(sn1);  *) ()
+  | KeyDown, "a" -> putTwr (); (* putTwr(sn1);  *) ()
   | KeyDown, "s" -> swtchSn (); (* swtchSn();    *) ()
 
   | _ -> ()
