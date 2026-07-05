@@ -114,6 +114,10 @@ function shift(lst) {
   }
 }
 
+function shift_rev(lst) {
+  return shift(List.rev(lst));
+}
+
 function putTwr(sn) {
   return push(twrs_lst, {
               tx: sn.sx,
@@ -194,7 +198,7 @@ function stepSn(sn) {
       tl: trail_1
     };
     var len = sn.len + 1 | 0;
-    var trail$1 = sn.len >= sn.size ? shift(sn.trail) : trail;
+    var trail$1 = sn.len >= sn.size ? shift(List.rev(sn.trail)) : trail;
     match = [
       trail$1,
       len
@@ -478,6 +482,7 @@ window.addEventListener("keyup", (function (param) {
 var w = 780;
 
 var h = 500;
+
 
 
 

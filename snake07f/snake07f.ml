@@ -143,6 +143,9 @@ let shift lst =
   | _ :: lst -> lst
   | [] -> lst
 
+let shift_rev lst =
+  shift (List.rev lst)
+
 let putTwr sn =
   push twrs_lst {
     tx = sn.sx;
@@ -234,7 +237,7 @@ let stepSn sn =
       let trail = { dx = sn.sx; dy = sn.sy; } :: sn.trail in
       let len = sn.len + 1 in
       let trail =
-        if sn.len >= sn.size then shift sn.trail else trail
+        if sn.len >= sn.size then shift_rev sn.trail else trail
       in
       (trail, len)
     end
