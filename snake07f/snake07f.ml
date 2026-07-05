@@ -424,9 +424,17 @@ let draw_f () =
   *)
   (*
   *)
-  drawSn sn1 "#ddd";
-  drawSn sn2 "#888";
-  drawSn sn3 "#888";
+  begin
+    match !sn_lst with
+    | [ sn1; sn2; sn3; ] ->
+
+        drawSn sn1 "#ddd";
+        drawSn sn2 "#888";
+        drawSn sn3 "#888";
+
+    | _ -> ()
+  end;
+
   ()
 ;;
 

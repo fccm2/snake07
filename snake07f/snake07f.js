@@ -358,9 +358,20 @@ function draw_f(param) {
     
   }
   List.iter(drawTwr, twrs_lst.contents);
-  drawSn(sn1, "#ddd");
-  drawSn(sn2, "#888");
-  drawSn(sn3, "#888");
+  var match$3 = sn_lst.contents;
+  if (match$3) {
+    var match$4 = match$3.tl;
+    if (match$4) {
+      var match$5 = match$4.tl;
+      if (match$5 && !match$5.tl) {
+        drawSn(match$3.hd, "#ddd");
+        drawSn(match$4.hd, "#888");
+        drawSn(match$5.hd, "#888");
+      }
+      
+    }
+    
+  }
   
 }
 
