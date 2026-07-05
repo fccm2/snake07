@@ -399,9 +399,16 @@ let draw_f () =
   for (let s of sn3.trail) drawRect(s.x, s.y, '#8888');
   *)
 
-  List.iter (fun (d) -> drawRect (d.dx, d.dy) "#8888") sn1.trail;
-  List.iter (fun (d) -> drawRect (d.dx, d.dy) "#8888") sn2.trail;
-  List.iter (fun (d) -> drawRect (d.dx, d.dy) "#8888") sn3.trail;
+  begin
+    match !sn_lst with
+    | [ sn1; sn2; sn3; ] ->
+
+        List.iter (fun (d) -> drawRect (d.dx, d.dy) "#8888") sn1.trail;
+        List.iter (fun (d) -> drawRect (d.dx, d.dy) "#8888") sn2.trail;
+        List.iter (fun (d) -> drawRect (d.dx, d.dy) "#8888") sn3.trail;
+
+    | _ -> ()
+  end;
 
   (*
   for (let tw of twrs) drawTwr(tw);
@@ -429,6 +436,7 @@ let draw_f () =
 let animate_loop () =
   draw_f ();
   step_f ();
+  ()
 ;;
 
 (* main *)

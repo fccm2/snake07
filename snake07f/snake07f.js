@@ -328,24 +328,35 @@ function draw_f(param) {
   setId(undefined);
   drawBg(undefined);
   mvView(undefined);
-  List.iter((function (d) {
-          return drawRect([
-                      d.dx,
-                      d.dy
-                    ], "#8888");
-        }), /* [] */0);
-  List.iter((function (d) {
-          return drawRect([
-                      d.dx,
-                      d.dy
-                    ], "#8888");
-        }), /* [] */0);
-  List.iter((function (d) {
-          return drawRect([
-                      d.dx,
-                      d.dy
-                    ], "#8888");
-        }), /* [] */0);
+  var match = sn_lst.contents;
+  if (match) {
+    var match$1 = match.tl;
+    if (match$1) {
+      var match$2 = match$1.tl;
+      if (match$2 && !match$2.tl) {
+        List.iter((function (d) {
+                return drawRect([
+                            d.dx,
+                            d.dy
+                          ], "#8888");
+              }), match.hd.trail);
+        List.iter((function (d) {
+                return drawRect([
+                            d.dx,
+                            d.dy
+                          ], "#8888");
+              }), match$1.hd.trail);
+        List.iter((function (d) {
+                return drawRect([
+                            d.dx,
+                            d.dy
+                          ], "#8888");
+              }), match$2.hd.trail);
+      }
+      
+    }
+    
+  }
   List.iter(drawTwr, twrs_lst.contents);
   drawSn(sn1, "#ddd");
   drawSn(sn2, "#888");
@@ -355,7 +366,8 @@ function draw_f(param) {
 
 function animate_loop(param) {
   draw_f(undefined);
-  return step_f(undefined);
+  step_f(undefined);
+  
 }
 
 setInterval(animate_loop, 200);
