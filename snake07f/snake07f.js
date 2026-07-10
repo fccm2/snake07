@@ -107,15 +107,21 @@ function push(lst, elem) {
 }
 
 function shift(lst) {
-  if (lst) {
-    return lst.tl;
+  var match = List.rev(lst);
+  if (match) {
+    return List.rev(match.tl);
   } else {
     return lst;
   }
 }
 
 function shift_rev(lst) {
-  return shift(List.rev(lst));
+  var lst$1 = List.rev(lst);
+  if (lst$1) {
+    return List.rev(lst$1.tl);
+  } else {
+    return lst$1;
+  }
 }
 
 function putTwr(param) {
@@ -200,6 +206,27 @@ function drawTxt(param, txt, cl) {
   
 }
 
+function push_last(last, list) {
+  var _ac = /* [] */0;
+  var _list = list;
+  while(true) {
+    var list$1 = _list;
+    var ac = _ac;
+    if (!list$1) {
+      return List.rev({
+                  hd: last,
+                  tl: ac
+                });
+    }
+    _list = list$1.tl;
+    _ac = {
+      hd: list$1.hd,
+      tl: ac
+    };
+    continue ;
+  };
+}
+
 function stepSn(sn) {
   var d = sn.dir;
   var match;
@@ -214,7 +241,7 @@ function stepSn(sn) {
       tl: trail_1
     };
     var len = sn.len + 1 | 0;
-    var trail$1 = sn.len >= sn.size ? shift(List.rev(sn.trail)) : trail;
+    var trail$1 = len >= sn.size ? shift(trail) : trail;
     match = [
       trail$1,
       len
@@ -498,6 +525,7 @@ window.addEventListener("keyup", (function (param) {
 var w = 780;
 
 var h = 500;
+
 
 
 

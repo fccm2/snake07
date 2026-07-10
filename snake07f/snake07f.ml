@@ -139,12 +139,17 @@ let push lst elem =
 ;;
 
 let shift lst =
-  match lst with
-  | _ :: lst -> lst
+  match List.rev lst with
+  | _ :: lst -> List.rev lst
   | [] -> lst
 
 let shift_rev lst =
-  shift (List.rev lst)
+  match lst with
+  | _ :: lst -> List.rev lst
+  | [] -> lst
+
+let shift_rev lst =
+  shift_rev (List.rev lst)
 
 let putTwr () =
 
@@ -236,6 +241,16 @@ let drawTxt (x, y) txt cl =
   Canvas.fillText ctx txt x y;
 ;;
 
+(* push_last *)
+
+let push_last last list =
+  let rec aux ac list =
+    match list with
+    | front :: list -> aux (front::ac) list
+    | [] -> List.rev (last :: ac)
+  in
+  aux [] list
+
 (* stepSn *)
 
 let stepSn sn =
@@ -243,10 +258,18 @@ let stepSn sn =
   let trail, len =
     if (d <> d0) then
     begin
+      (*
+      let trail = (*push_last*) { dx = sn.sx; dy = sn.sy; } :: sn.trail in
+      let len = sn.len + 1 in
+      let trail =
+        if len >= sn.size then shift_rev sn.trail else trail
+      in
+      (trail, len)
+      *)
       let trail = { dx = sn.sx; dy = sn.sy; } :: sn.trail in
       let len = sn.len + 1 in
       let trail =
-        if sn.len >= sn.size then shift_rev sn.trail else trail
+        if len >= sn.size then shift trail else trail
       in
       (trail, len)
     end
